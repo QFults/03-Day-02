@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form>
+    <p>
+      <label for="search">search</label>
+      <input type="text" name="search" id="search">
+    </p>
+    <p>
+      <button id="searchGIPHY">Search GIPHY</button>
+    </p>
+  </form>
+  <div id="gifs"></div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+
+    document.getElementById('searchGIPHY').addEventListener('click', event => {
+      event.preventDefault()
+
+      axios.get(`https://api.giphy.com/v1/gifs/search?api_key=j6yOF05YP8AGwMifwqeDBZ1RYjr4n0Tj&q=${document.getElementById('search').value}&rating=g&limit=10`)
+        .then(res => {
+          let gifs = res.data.data
+          console.log(gifs)
+          
+          document.getElementById('gifs').innerHTML = ''
+          gifs.forEach(gif => {
+            let gifElem = document.createElement('img')
+            gifElem.className = 'gif'
+            gifElem.src = gif.images.original.url
+            gifElem.alt = gif.title
+            gifElem.dataset.animated = gif.images.original.url
+            gifElem.dataset.still = gif.images.original_still.url
+            document.getElementById('gifs').append(gifElem)
+          })
+          document.getElementById('search').value = ''
+        })
+        .catch(err => console.error(err))
+    })
+
+    document.addEventListener('click', event => {
+      if (event.target.className === 'gif') {
+        if (event.target.src === event.target.dataset.animated) {
+          event.target.src = event.target.dataset.still
+        } else {
+          event.target.src = event.target.dataset.animated
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
