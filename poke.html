@@ -42,7 +42,7 @@
           <h4>Weight: ${pokemon.weight}</h4>
         `
 
-          axios.get(`https://api.giphy.com/v1/gifs/search?api_key=j6yOF05YP8AGwMifwqeDBZ1RYjr4n0Tj&q=${pokemon.name}&rating=g&limit=5`)
+          axios.get(`https://api.giphy.com/v1/gifs/search?api_key=j6yOF05YP8AGwMifwqeDBZ1RYjr4n0Tj&q=pokemon+${pokemon.name}&rating=g&limit=5`)
             .then(resp => {
               let gifs = resp.data.data
               console.log(gifs)
