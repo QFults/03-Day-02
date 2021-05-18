@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form>
+    <p>
+      <label for="search">search</label>
+      <input type="text" name="search" id="search">
+    </p>
+    <p>
+      <button id="searchPokemon">Search Pokemon</button>
+    </p>
+  </form>
+  <div id="pokemon"></div>
+  <div id="gifs"></div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+
+    document.getElementById('searchPokemon').addEventListener('click', event => {
+      event.preventDefault()
+
+      axios.get(`https://pokeapi.co/api/v2/pokemon/${document.getElementById('search').value}`)
+        .then(res => {
+          let pokemon = res.data
+          console.log(pokemon)
+
+          let nameArr = pokemon.name.split('')
+          nameArr[0] = nameArr[0].toUpperCase()
+          let name = nameArr.join('')
+
+          document.getElementById('pokemon').innerHTML = `
+          <h1>Name: ${name}</h1>
+          <h2>Pokedex #: ${pokemon.id}</h2>
+          <h3>Height: ${pokemon.height}</h3>
+          <h4>Weight: ${pokemon.weight}</h4>
+        `
+
+          axios.get(`https://api.giphy.com/v1/gifs/search?api_key=j6yOF05YP8AGwMifwqeDBZ1RYjr4n0Tj&q=${pokemon.name}&rating=g&limit=5`)
+            .then(resp => {
+              let gifs = resp.data.data
+              console.log(gifs)
+
+              document.getElementById('gifs').innerHTML = ''
+              gifs.forEach(gif => {
+                let gifElem = document.createElement('img')
+                gifElem.className = 'gif'
+                gifElem.src = gif.images.original.url
+                gifElem.alt = gif.title
+                document.getElementById('gifs').append(gifElem)
+              })
+              document.getElementById('search').value = ''
+            })
+            .catch(err => console.error(err))
+        })
+        .catch(err => console.error(err))
+    })
+  </script>
+</body>
+
+</html>
