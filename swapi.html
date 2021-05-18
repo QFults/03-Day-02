@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form>
+    <p>
+      <label for="name">name</label>
+      <input type="text" name="name" id="name">
+    </p>
+    <p>
+      <button id="search">Search</button>
+    </p>
+  </form>
+  <div id="character"></div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+
+    document.getElementById('search').addEventListener('click', event => {
+      event.preventDefault()
+
+      axios.get(`https://swapi.dev/api/people/?search=${document.getElementById('name').value}`)
+        .then(res => {
+          let character = res.data.results[0]
+          console.log(character)
+          document.getElementById('character').innerHTML = `
+            <h1>Name: ${character.name}</h1>
+            <h2>Birth Year: ${character.birth_year}</h2>
+            <h3>Height: ${character.height}</h3>
+            <h4>Color: ${character.skin_color}</h4>
+          `
+          document.getElementById('name').value = ''
+        })
+        .catch(err => console.error(err))
+    })
+
+
+  </script>
+</body>
+
+</html>
